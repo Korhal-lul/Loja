@@ -13,14 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Model.Produtos;
+import View.Main;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Editar extends JFrame {
 
@@ -31,18 +37,24 @@ public class Editar extends JFrame {
 	/**
 	 * Create the frame.
 	 * 
+	 * @param frame
+	 * 
 	 * @throws IOException
 	 * @throws FontFormatException
 	 */
-	public Editar(Produtos prod) throws FontFormatException, IOException {
-
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("../Loja[Git]/Fonts/Roboto-Medium.ttf"))
-				.deriveFont(20f);
+	public Editar(Produtos prod, Main frame) throws FontFormatException, IOException {
+		frame.setVisible(false);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				frame.setVisible(true);
+			}
+		});
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("./Fonts/Roboto-Medium.ttf")).deriveFont(20f);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1020, 720);
 		setTitle("Loja");
 		setContentPane(contentPane);
@@ -59,8 +71,8 @@ public class Editar extends JFrame {
 		contentPane.add(lblId);
 		lblId.setFont(font);
 
-		JLabel lblPreco = new JLabel("Preço : " + prod.getPreco());
-		lblPreco.setBounds(204, 428, 164, 53);
+		JLabel lblPreco = new JLabel("Preco : " + prod.getPreco());
+		lblPreco.setBounds(204, 428, 164, 60);
 		contentPane.add(lblPreco);
 		lblPreco.setFont(font);
 
@@ -75,6 +87,12 @@ public class Editar extends JFrame {
 		txtPreco.setColumns(10);
 
 		txtNome = new JTextField();
+		txtNome.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				prod.setNome(txtNome.getText());
+			}
+		});
 		txtNome.setBounds(471, 312, 86, 20);
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
@@ -84,28 +102,14 @@ public class Editar extends JFrame {
 		spinner.setBounds(891, 312, 86, 20);
 		contentPane.add(spinner);
 
-		JButton btnConfirmar = new JButton("Confirmar");
+		JButton btnConfirmar = new JButton("Back");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int qtd = (Integer) spinner.getValue();
-
-				try {
-					float preco = Float.parseFloat(txtPreco.getText());
-
-					if (preco <= 0) {
-						JOptionPane.showMessageDialog(null, "Preco Negativo", "ERROR", JOptionPane.WARNING_MESSAGE);
-						return;
-					}
-
-				} catch (NumberFormatException e) {
-					// TODO: handle exception
-					
-					JOptionPane.showMessageDialog(null, "Invalid Value", "ERROR", JOptionPane.WARNING_MESSAGE);
-				}
-
+				dispose();
+				frame.setVisible(true);
 			}
 		});
-		btnConfirmar.setBounds(429, 585, 206, 53);
+		btnConfirmar.setBounds(425, 583, 206, 53);
 		btnConfirmar.setFocusPainted(false);
 		btnConfirmar.setBackground(Color.white);
 		contentPane.add(btnConfirmar);

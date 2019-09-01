@@ -52,23 +52,24 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.SwingConstants;
-
-public class Main extends JFrame {
+ 
+public class Main extends JFrame{
 
 	private JPanel contentPane;
 	private JTextField txtNome;
 	private JTextField txtPreco;
 	private JTable tblProdutos;
 	private JTextField txtIdProd;
+	private static Main frame;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main frame = new Main();
+					frame = new Main();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -271,13 +272,12 @@ public class Main extends JFrame {
 							if (i.getID() == id) {
 								Editar edit = null;
 								try {
-									edit = new Editar(i);
+									edit = new Editar(i, frame);
 								} catch (FontFormatException | IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 								edit.setVisible(true);
-								dispose();
 							}
 						}
 					} catch (NumberFormatException e) {
