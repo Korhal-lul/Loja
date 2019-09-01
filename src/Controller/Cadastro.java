@@ -1,17 +1,16 @@
 package Controller;
 
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import Model.Produtos;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class Cadastro {
 	public static void cadastra(Produtos i, JComboBox cbbSearch, DefaultTableModel model, JTable tblProdutos) {
 
 		model.setColumnIdentifiers(new String[] { "ID", "Produto", "Preco", "Quantidade", "Preco Total" });
 
-		Object row[] = new Object[5];
+		Object[] row = new Object[5];
 		
 		row[0] = i.getID();
 		row[1] = i.getNome();
@@ -23,5 +22,5 @@ public class Cadastro {
 
 		tblProdutos.setModel(model);
 	}
-	//machado passou por aqui
+	//machado passou por aqui :)
 }

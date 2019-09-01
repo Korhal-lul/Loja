@@ -17,6 +17,7 @@ public class Produtos {
 		this.preco = bd.floatValue();
 		  
 	}
+
 	public String getNome() {
 		return nome;
 	}

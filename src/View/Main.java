@@ -1,61 +1,23 @@
 package View;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.FontFormatException;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.JTextComponent;
-
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 import Controller.Cadastro;
 import Controller.Editar;
 import Model.Produtos;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JMenu;
-import javax.swing.JLabel;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Vector;
-import java.awt.event.ActionEvent;
-import javax.swing.JLayeredPane;
-import javax.swing.JToggleButton;
-import javax.swing.JList;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JTable;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.AbstractListModel;
-import javax.swing.JScrollPane;
-import javax.swing.JScrollBar;
-import javax.swing.JComboBox;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import javax.swing.SwingConstants;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main extends JFrame {
 
-	private JPanel contentPane;
 	private JTextField txtNome;
 	private JTextField txtPreco;
 	private JTable tblProdutos;
@@ -65,14 +27,12 @@ public class Main extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main frame = new Main();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				Main frame = new Main();
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -84,7 +44,7 @@ public class Main extends JFrame {
 	 * @throws FontFormatException
 	 */
 	@SuppressWarnings("serial")
-	public Main() throws FontFormatException, IOException {
+	private Main() throws FontFormatException, IOException {
 		DefaultTableModel model = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -98,7 +58,6 @@ public class Main extends JFrame {
 		setTitle("Loja");
 
 		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("./Fonts/Roboto-Medium.ttf"))
-
 				.deriveFont(15f);
 
 		JSpinner spnQTD = new JSpinner();
@@ -111,7 +70,7 @@ public class Main extends JFrame {
 
 		JLabel lblSearch = new JLabel("Search");
 		JLabel lblNome = new JLabel("Nome:");
-		JLabel lblWhite = new JLabel("");
+//		JLabel lblWhite = new JLabel("");
 		JLabel lblMainImg = new JLabel("");
 		JLabel lblPreco = new JLabel("Preco");
 		JLabel lblQuantidade = new JLabel("Quantidade");
@@ -160,7 +119,7 @@ public class Main extends JFrame {
 		setJMenuBar(menuBar);
 
 		menuBar.add(mnFile);
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -242,11 +201,8 @@ public class Main extends JFrame {
 
 		btnClear.setFocusPainted(false);
 		btnClear.setBackground(Color.WHITE);
-		btnClear.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (!produtos.isEmpty())
-					tblProdutos.setModel(model);
-			}
+		btnClear.addActionListener(e -> {
+			if (!produtos.isEmpty()) tblProdutos.setModel(model);
 		});
 		btnClear.setBounds(664, 5, 89, 23);
 		layeredProdutos.add(btnClear);
@@ -310,40 +266,38 @@ public class Main extends JFrame {
 		lblQuantidade.setBounds(276, 226, 118, 40);
 		layeredCadastrar.add(lblQuantidade);
 
-		spnQTD.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+		spnQTD.setModel(new SpinnerNumberModel(1, 1, null, 1));
 		spnQTD.setBounds(428, 236, 86, 20);
 		layeredCadastrar.add(spnQTD);
 
-		btnCadastrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String nome = txtNome.getText();
-					int qtd = (Integer) spnQTD.getValue();
-					float preco = Float.parseFloat(txtPreco.getText());
-					
-					if (preco <= 0) {
-						JOptionPane.showMessageDialog(null, "Preco Invalido", "ERRO", JOptionPane.WARNING_MESSAGE);
+		btnCadastrar.addActionListener(arg0 -> {
+			try {
+				String nome = txtNome.getText();
+				int qtd = (Integer) spnQTD.getValue();
+				float preco = Float.parseFloat(txtPreco.getText());
+
+				if (preco <= 0) {
+					JOptionPane.showMessageDialog(null, "Preco Invalido", "ERRO", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				Produtos prod = new Produtos(nome, qtd, preco);
+
+				cbbSearch.removeAllItems();
+				for (Produtos i : produtos) {
+					cbbSearch.addItem(i.getNome());
+					if (i.getNome().equalsIgnoreCase(nome)) {
+						JOptionPane.showMessageDialog(null, "Ja cadastrado", "ERROR 404",
+								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					Produtos prod = new Produtos(nome, qtd, preco);
-
-					cbbSearch.removeAllItems();
-					for (Produtos i : produtos) {
-						cbbSearch.addItem(i.getNome());
-						if (i.getNome().equalsIgnoreCase(nome)) {
-							JOptionPane.showMessageDialog(null, "Ja cadastrado", "ERROR 404",
-									JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-					}
-
-					produtos.add(prod);
-
-					Cadastro.cadastra(prod, cbbSearch, model, tblProdutos);
-
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "ERRO, bem aq");
 				}
+
+				produtos.add(prod);
+
+				Cadastro.cadastra(prod, cbbSearch, model, tblProdutos);
+
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "ERRO, bem aq");
 			}
 		});
 		btnCadastrar.setFocusPainted(false);
