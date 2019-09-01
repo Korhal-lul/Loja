@@ -16,6 +16,7 @@ import javax.swing.text.JTextComponent;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import Controller.Cadastro;
+import Controller.Editar;
 import Model.Produtos;
 
 import javax.swing.JMenuBar;
@@ -50,6 +51,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.SwingConstants;
 
 public class Main extends JFrame {
 
@@ -57,6 +59,7 @@ public class Main extends JFrame {
 	private JTextField txtNome;
 	private JTextField txtPreco;
 	private JTable tblProdutos;
+	private JTextField txtIdProd;
 
 	/**
 	 * Launch the application.
@@ -82,8 +85,7 @@ public class Main extends JFrame {
 	 */
 	public Main() throws FontFormatException, IOException {
 		@SuppressWarnings("serial")
-		DefaultTableModel model = new DefaultTableModel(new Object[][] { { null, null, null, null }, },
-				new String[] { "Produto", "Preco", "Quantidade", "Preco Total" }) {
+		DefaultTableModel model = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				// all cells false
@@ -95,7 +97,11 @@ public class Main extends JFrame {
 		setBounds(100, 100, 1020, 720);
 		setTitle("Loja");
 
+<<<<<<< HEAD
 		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("./Fonts/Roboto-Medium.ttf"))
+=======
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("../Loja[Git]/Fonts/Roboto-Medium.ttf"))
+>>>>>>> abc0429c7150cdc51a7cc3392dd6315bcaf78e40
 				.deriveFont(15f);
 
 		JSpinner spnQTD = new JSpinner();
@@ -112,12 +118,10 @@ public class Main extends JFrame {
 		JLabel lblMainImg = new JLabel("");
 		JLabel lblPreco = new JLabel("Preco");
 		JLabel lblQuantidade = new JLabel("Quantidade");
-		JLabel lblTotPreco = new JLabel("Preco total: R$00,00");
 		lblSearch.setFont(font);
 		lblNome.setFont(font);
 		lblPreco.setFont(font);
 		lblQuantidade.setFont(font);
-		lblTotPreco.setFont(font);
 
 		ArrayList<Produtos> produtos = new ArrayList<>();
 
@@ -139,6 +143,16 @@ public class Main extends JFrame {
 		JLayeredPane layeredRemover = new JLayeredPane();
 		JLayeredPane layeredExcluir = new JLayeredPane();
 		JLayeredPane layeredCadastrar = new JLayeredPane();
+		layeredCadastrar.setOpaque(true);
+		layeredCadastrar.setBackground(Color.white);
+		layeredEditar.setOpaque(true);
+		layeredEditar.setBackground(Color.white);
+		layeredExcluir.setOpaque(true);
+		layeredExcluir.setBackground(Color.white);
+		layeredProdutos.setOpaque(true);
+		layeredProdutos.setBackground(Color.white);
+		layeredRemover.setOpaque(true);
+		layeredRemover.setBackground(Color.white);
 
 		txtNome = new JTextField();
 		txtPreco = new JTextField();
@@ -159,8 +173,8 @@ public class Main extends JFrame {
 
 		tabbedPane.addTab("Produtos", null, layeredProdutos, null);
 
-		tblProdutos = new JTable(new DefaultTableModel(new Object[][] { { null, null, null, null }, },
-				new String[] {"Produto", "Preco", "Quantidade", "Preco Total" }));
+		tblProdutos = new JTable(new DefaultTableModel(new Object[][] { { null, null, null, null, null }, },
+				new String[] { "ID", "Produto", "Preco", "Quantidade", "Preco Total" }));
 		font = font.deriveFont(10f);
 		tblProdutos.setFont(font);
 
@@ -175,12 +189,11 @@ public class Main extends JFrame {
 		scrollPane.setBounds(0, 34, 1009, 419);
 		layeredProdutos.add(scrollPane);
 
-		lblSearch.setBounds(339, 5, 78, 16);
+		lblSearch.setBounds(328, 8, 78, 16);
 		layeredProdutos.add(lblSearch);
 
 		cbbSearch.setMaximumRowCount(5);
 		cbbSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-
 			@Override
 			public void keyReleased(KeyEvent event) {
 				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -208,27 +221,58 @@ public class Main extends JFrame {
 						if (count == 0) {
 							JOptionPane.showMessageDialog(null, "Nothing found!", "Search",
 									JOptionPane.WARNING_MESSAGE);
-							;
 						}
 					}
 				}
 			}
 		});
 
-		cbbSearch.setBounds(427, 3, 220, 20);
+		cbbSearch.setBounds(416, 6, 220, 20);
 		layeredProdutos.add(cbbSearch);
 
 		btnClear.setFocusPainted(false);
 		btnClear.setBackground(Color.WHITE);
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tblProdutos.setModel(model);
+				if (!produtos.isEmpty())
+					tblProdutos.setModel(model);
 			}
 		});
-		btnClear.setBounds(675, 2, 89, 23);
+		btnClear.setBounds(664, 5, 89, 23);
 		layeredProdutos.add(btnClear);
 
 		tabbedPane.addTab("Editar", null, layeredEditar, null);
+
+		JLabel lblIdDoProduto = new JLabel("ID do produto: ");
+		font = font.deriveFont(30f);
+		lblIdDoProduto.setFont(font);
+		lblIdDoProduto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIdDoProduto.setBounds(187, 96, 302, 116);
+		layeredEditar.add(lblIdDoProduto);
+
+		txtIdProd = new JTextField();
+		txtIdProd.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent event) {
+				if (event.getKeyChar() == KeyEvent.VK_ENTER) {
+					try {
+						int id = Integer.parseInt(txtIdProd.getText());
+						for (Produtos i : produtos) {
+							if (i.getID() == id) {
+								Editar edit = new Editar();
+								edit.setVisible(true);
+								dispose();
+							}
+						}
+					} catch (NumberFormatException e) {
+						// TODO: handle exception
+					}
+				}
+			}
+		});
+		txtIdProd.setBounds(499, 141, 225, 32);
+		layeredEditar.add(txtIdProd);
+		txtIdProd.setColumns(10);
 		tabbedPane.addTab("Remover", null, layeredRemover, null);
 		tabbedPane.addTab("Excluir", null, layeredExcluir, null);
 		tabbedPane.addTab("Cadastrar", null, layeredCadastrar, null);
@@ -254,9 +298,6 @@ public class Main extends JFrame {
 		spnQTD.setBounds(428, 236, 86, 20);
 		layeredCadastrar.add(spnQTD);
 
-		lblTotPreco.setBounds(368, 294, 146, 46);
-		layeredCadastrar.add(lblTotPreco);
-
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -264,8 +305,6 @@ public class Main extends JFrame {
 					int qtd = (Integer) spnQTD.getValue();
 					float preco = Float.parseFloat(txtPreco.getText());
 
-					String precoTot = ("Preco total: R$" + (qtd * preco));
-					lblTotPreco.setText(precoTot);
 					Produtos prod = new Produtos(nome, qtd, preco);
 
 					cbbSearch.removeAllItems();
@@ -287,17 +326,28 @@ public class Main extends JFrame {
 				}
 			}
 		});
-
+		btnCadastrar.setFocusPainted(false);
+		btnCadastrar.setBackground(Color.white);
 		btnCadastrar.setBounds(779, 163, 164, 46);
 		layeredCadastrar.add(btnCadastrar);
 
+<<<<<<< HEAD
 //		lblWhite.setIcon(new ImageIcon("C:/Users/Aluno/Desktop/CardGame/Teste/Img/branco.jpg"));
 //		lblWhite.setBounds(223, 72, 342, 315);
 //		layeredCadastrar.add(lblWhite);
 
 		lblMainImg.setIcon(new ImageIcon("./Images/shop.png"));
+=======
+		/*
+		 * lblWhite.setIcon(new
+		 * ImageIcon("C:/Users/Aluno/Desktop/CardGame/Teste/Img/branco.jpg"));
+		 * lblWhite.setBounds(223, 72, 342, 315); layeredCadastrar.add(lblWhite);
+		 */
+
+		lblMainImg.setIcon(new ImageIcon("../Loja[Git]/Images/shop.png"));
+>>>>>>> abc0429c7150cdc51a7cc3392dd6315bcaf78e40
 		lblMainImg.setBounds(0, 0, 1060, 212);
 		contentPane.add(lblMainImg);
-	}
 
+	}
 }
