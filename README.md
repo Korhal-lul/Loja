@@ -1,3 +1,3 @@
 #loja
 
-AGR VAI VIADO
+nao
