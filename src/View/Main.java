@@ -83,8 +83,8 @@ public class Main extends JFrame {
 	 * @throws IOException
 	 * @throws FontFormatException
 	 */
+	@SuppressWarnings("serial")
 	public Main() throws FontFormatException, IOException {
-		@SuppressWarnings("serial")
 		DefaultTableModel model = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -97,7 +97,8 @@ public class Main extends JFrame {
 		setBounds(100, 100, 1020, 720);
 		setTitle("Loja");
 
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("../Loja[Git]/Fonts/Roboto-Medium.ttf"))
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("./Fonts/Roboto-Medium.ttf"))
+
 				.deriveFont(15f);
 
 		JSpinner spnQTD = new JSpinner();
@@ -169,8 +170,21 @@ public class Main extends JFrame {
 
 		tabbedPane.addTab("Produtos", null, layeredProdutos, null);
 
-		tblProdutos = new JTable(new DefaultTableModel(new Object[][] { { null, null, null, null, null }, },
-				new String[] { "ID", "Produto", "Preco", "Quantidade", "Preco Total" }));
+		tblProdutos = new JTable(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"ID", "Produto", "Preco", "Quantidade", "Preco Total"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Integer.class, String.class, Float.class, Integer.class, Float.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
 		font = font.deriveFont(10f);
 		tblProdutos.setFont(font);
 
@@ -306,7 +320,11 @@ public class Main extends JFrame {
 					String nome = txtNome.getText();
 					int qtd = (Integer) spnQTD.getValue();
 					float preco = Float.parseFloat(txtPreco.getText());
-
+					
+					if (preco <= 0) {
+						JOptionPane.showMessageDialog(null, "Preco Invalido", "ERRO", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
 					Produtos prod = new Produtos(nome, qtd, preco);
 
 					cbbSearch.removeAllItems();
@@ -338,8 +356,8 @@ public class Main extends JFrame {
 		 * ImageIcon("C:/Users/Aluno/Desktop/CardGame/Teste/Img/branco.jpg"));
 		 * lblWhite.setBounds(223, 72, 342, 315); layeredCadastrar.add(lblWhite);
 		 */
+		lblMainImg.setIcon(new ImageIcon("./Images/shop.png"));
 
-		lblMainImg.setIcon(new ImageIcon("../Loja[Git]/Images/shop.png"));
 		lblMainImg.setBounds(0, 0, 1060, 212);
 		contentPane.add(lblMainImg);
 

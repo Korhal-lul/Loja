@@ -1,5 +1,7 @@
 package Model;
 
+import java.math.BigDecimal;
+
 public class Produtos {
 	private String nome;
 	private static int ID = 0;
@@ -7,10 +9,13 @@ public class Produtos {
 	private float preco;
 	
 	public Produtos(String nome, int qtd, float preco) {
+		BigDecimal bd = new BigDecimal(Float.toString(preco));
+	    bd = bd.setScale(2, BigDecimal.ROUND_DOWN); 
 		ID++;
 		this.nome = nome;
 		this.qtd = qtd;
-		this.preco = preco;
+		this.preco = bd.floatValue();
+		  
 	}
 	public String getNome() {
 		return nome;

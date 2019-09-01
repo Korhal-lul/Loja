@@ -14,23 +14,31 @@ import javax.swing.border.EmptyBorder;
 
 import Model.Produtos;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class Editar extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtNovo;
+	private JTextField txtPreco;
+	private JTextField txtNome;
 
 	/**
 	 * Create the frame.
-	 * @throws IOException 
-	 * @throws FontFormatException 
+	 * 
+	 * @throws IOException
+	 * @throws FontFormatException
 	 */
 	public Editar(Produtos prod) throws FontFormatException, IOException {
 
 		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("../Loja[Git]/Fonts/Roboto-Medium.ttf"))
-				.deriveFont(15f);
-		
+				.deriveFont(20f);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setResizable(false);
@@ -40,31 +48,67 @@ public class Editar extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setBackground(Color.decode("#ffe6f1"));
 		contentPane.setLayout(null);
-		
+
 		JLabel lblNome = new JLabel("Nome : " + prod.getNome());
-		lblNome.setBounds(217, 192, 152, 31);
+		lblNome.setBounds(204, 296, 164, 53);
 		contentPane.add(lblNome);
 		lblNome.setFont(font);
-		
+
 		JLabel lblId = new JLabel("ID : " + prod.getID());
-		lblId.setBounds(217, 64, 167, 31);
+		lblId.setBounds(204, 168, 179, 53);
 		contentPane.add(lblId);
 		lblId.setFont(font);
-		
-		JLabel lblPreco = new JLabel("Preco : " + prod.getPreco());
-		lblPreco.setBounds(217, 324, 152, 31);
+
+		JLabel lblPreco = new JLabel("Preço : " + prod.getPreco());
+		lblPreco.setBounds(204, 428, 164, 53);
 		contentPane.add(lblPreco);
 		lblPreco.setFont(font);
-		
+
 		JLabel lblQtd = new JLabel("Quantidade : " + prod.getQtd());
-		lblQtd.setBounds(673, 192, 152, 31);
+		lblQtd.setBounds(660, 296, 188, 53);
 		contentPane.add(lblQtd);
 		lblQtd.setFont(font);
-		
-		txtNovo = new JTextField();
-		txtNovo.setText("novo");
-		txtNovo.setBounds(406, 329, 86, 20);
-		contentPane.add(txtNovo);
-		txtNovo.setColumns(10);
+
+		txtPreco = new JTextField();
+		txtPreco.setBounds(471, 444, 86, 20);
+		contentPane.add(txtPreco);
+		txtPreco.setColumns(10);
+
+		txtNome = new JTextField();
+		txtNome.setBounds(471, 312, 86, 20);
+		contentPane.add(txtNome);
+		txtNome.setColumns(10);
+
+		JSpinner spinner = new JSpinner();
+		spinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+		spinner.setBounds(891, 312, 86, 20);
+		contentPane.add(spinner);
+
+		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int qtd = (Integer) spinner.getValue();
+
+				try {
+					float preco = Float.parseFloat(txtPreco.getText());
+
+					if (preco <= 0) {
+						JOptionPane.showMessageDialog(null, "Preco Negativo", "ERROR", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+
+				} catch (NumberFormatException e) {
+					// TODO: handle exception
+					
+					JOptionPane.showMessageDialog(null, "Invalid Value", "ERROR", JOptionPane.WARNING_MESSAGE);
+				}
+
+			}
+		});
+		btnConfirmar.setBounds(429, 585, 206, 53);
+		btnConfirmar.setFocusPainted(false);
+		btnConfirmar.setBackground(Color.white);
+		contentPane.add(btnConfirmar);
+
 	}
 }

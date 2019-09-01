@@ -23,4 +23,5 @@ public class Cadastro {
 
 		tblProdutos.setModel(model);
 	}
+	//machado passou por aqui
 }
