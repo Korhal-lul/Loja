@@ -10,6 +10,4 @@ git rm -r --cached .
 
 git commit -m "fixed untracked files"
 
-git add .
-
 git push
