@@ -1,3 +1,3 @@
 #loja
 
-AGR VAI VIADO
+Projeto Loja do Korhal
