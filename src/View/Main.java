@@ -97,7 +97,8 @@ public class Main extends JFrame {
 		setBounds(100, 100, 1020, 720);
 		setTitle("Loja");
 
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("../Loja[Git]/Fonts/Roboto-Medium.ttf"))
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("./Fonts/Roboto-Medium.ttf"))
+
 				.deriveFont(15f);
 
 		JSpinner spnQTD = new JSpinner();
@@ -332,8 +333,8 @@ public class Main extends JFrame {
 		 * ImageIcon("C:/Users/Aluno/Desktop/CardGame/Teste/Img/branco.jpg"));
 		 * lblWhite.setBounds(223, 72, 342, 315); layeredCadastrar.add(lblWhite);
 		 */
+		lblMainImg.setIcon(new ImageIcon("./Images/shop.png"));
 
-		lblMainImg.setIcon(new ImageIcon("../Loja[Git]/Images/shop.png"));
 		lblMainImg.setBounds(0, 0, 1060, 212);
 		contentPane.add(lblMainImg);
 
