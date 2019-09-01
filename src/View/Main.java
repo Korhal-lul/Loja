@@ -255,7 +255,13 @@ public class Main extends JFrame {
 						int id = Integer.parseInt(txtIdProd.getText());
 						for (Produtos i : produtos) {
 							if (i.getID() == id) {
-								Editar edit = new Editar();
+								Editar edit = null;
+								try {
+									edit = new Editar(i);
+								} catch (FontFormatException | IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								edit.setVisible(true);
 								dispose();
 							}
